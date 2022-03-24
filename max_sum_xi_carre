@@ -1,0 +1,65 @@
+using JuMP
+using GLPK
+using SCIP
+using Plots
+
+
+#m nombre de breakpoints, n nombre de variables dans la somme
+function max_sum_xi_carre(first::Float64, last::Float64, n::Int64, m::Int64)::Vector{Float64}
+
+    m -= 1
+    breakpoints=collect(LinRange(first,last,m+1))
+    fpoints=map(x->x^2,breakpoints)
+
+    model::Model = Model(GLPK.Optimizer)
+    #model::Model = Model(SCIP.Optimizer)
+
+    @variable(model, y[1:n, 1:m], Bin)
+    @variable(model, t[1:n, 1:m+1] >= 0)
+
+    @variable(model, first <= x[1:n] <= last)
+    #@objective(model, Max, sum(sum(fpoints[k] * t[i,k] for k in 1:(m+1)) for i in 1:n))
+    #@objective(model, Max, sum(x[i]^2 for i in 1:n))
+    for i in 1:n
+        @constraint(model, t[i,1] <= y[i,1])
+        for k in 2:m
+            @constraint(model, t[i,k] <= y[i,k-1] + y[i,k])
+        end
+        @constraint(model, t[i,m+1] <= y[i,m])
+        @constraint(model, sum(y[i,k] for k in 1:m) == 1)
+        @constraint(model, sum(t[i,k] for k in 1:(m+1)) == 1)
+        @constraint(model, sum(breakpoints[k]*t[i,k] for k in 1:(m+1)) == x[i])
+    end    
+
+    @constraint(model, sum(sum(fpoints[k] * t[i,k] for k in 1:(m+1)) for i in 1:n) == 1)
+    #@constraint(model, sum(x[i]^2 for i in 1:n) == 1)
+    optimize!(model)
+    println(result_count(model))
+    return value.(x)       
+end
+
+function graphiques_erreurs()
+
+    nb_valeurs::Vector{Int64} = [2,3,4,5,10,15,20]
+    nb_breakpoints::Vector{Int64} = [3,5,10,20,30,40,50,100,150,200,300,400,500]
+
+    valeurs = Array{Float64, 2}(undef,length(nb_breakpoints),length(nb_valeurs))
+    io = open("resultats_calculs.txt", "w")
+
+    for i in 1:length(nb_valeurs)
+
+        for j in 1:length(nb_breakpoints)
+            valeurs[j,i] = sqrt(sum((min_sum_xi(-2.0,2.0,nb_valeurs[i],nb_breakpoints[j]) .- [-1/sqrt(nb_valeurs[i]) for k in 1:nb_valeurs[i]]).^2))
+            println("n = ", nb_valeurs[i], " m = ", nb_breakpoints[j])
+            println(valeurs[j,i])
+            println(io, "n = ", nb_valeurs[i], " m = ", nb_breakpoints[j] )
+            println(io,valeurs[j,i])
+        end
+    end
+    labels = ["n = 2" "n = 3" "n = 4" "n = 5" "n = 10" "n = 15" "n = 20" ]
+    plog = plot(nb_breakpoints, valeurs, label=labels,xlabel="nb_breakpoints", ylabel="norme de la différence entre x*_L et x*", yaxis=:log)
+    ploglog = plot(nb_breakpoints, valeurs, label=labels,xlabel="nb_breakpoints", ylabel="norme de la différence entre x*_L et x*", yaxis=:log, xaxis=:log)
+    savefig(plog,"echelle_ylog.png")
+    savefig(ploglog,"echelle_log_log.png")
+    
+end    

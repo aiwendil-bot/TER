@@ -1,0 +1,38 @@
+GLPSOL--GLPK LP/MIP Solver 5.0
+Parameter(s) specified in the command line:
+ --lp ../modeles/20_139.lp --log 20_139.log
+Reading problem data from '../modeles/20_139.lp'...
+2861 rows, 5600 columns, 19560 non-zeros
+2780 integer variables, all of which are binary
+8487 lines were read
+GLPK Integer Optimizer 5.0
+2861 rows, 5600 columns, 19560 non-zeros
+2780 integer variables, all of which are binary
+Preprocessing...
+2760 constraint coefficient(s) were reduced
+2861 rows, 5580 columns, 19540 non-zeros
+2780 integer variables, all of which are binary
+Scaling...
+ A: min|aij| =  2.070e-04  max|aij| =  4.000e+00  ratio =  1.932e+04
+GM: min|aij| =  8.482e-02  max|aij| =  1.179e+01  ratio =  1.390e+02
+EQ: min|aij| =  7.194e-03  max|aij| =  1.000e+00  ratio =  1.390e+02
+2N: min|aij| =  3.312e-03  max|aij| =  1.688e+00  ratio =  5.095e+02
+Constructing initial basis...
+Size of triangular part is 2861
+Solving LP relaxation...
+GLPK Simplex Optimizer 5.0
+2861 rows, 5580 columns, 19540 non-zeros
+      0: obj =   4.000000000e+01 inf =   8.260e+02 (41)
+Perturbing LP to avoid stalling [199]...
+    259: obj =   4.979554865e-01 inf =   0.000e+00 (0)
+Removing LP perturbation [641]...
+*   641: obj =  -4.465040468e+00 inf =   3.159e-13 (0) 1
+OPTIMAL LP SOLUTION FOUND
+Integer optimization begins...
+Long-step dual simplex will be used
++   641: mip =     not found yet >=              -inf        (1; 0)
++  1556: >>>>>  -4.465040468e+00 >=  -4.465040468e+00 < 0.1% (905; 0)
++  1556: mip =  -4.465040468e+00 >=     tree is empty   0.0% (0; 1809)
+INTEGER OPTIMAL SOLUTION FOUND
+Time used:   5.0 secs
+Memory used: 8.2 Mb (8581410 bytes)

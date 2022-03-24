@@ -1,0 +1,44 @@
+GLPSOL--GLPK LP/MIP Solver 5.0
+Parameter(s) specified in the command line:
+ --lp ../modeles/20_369.lp --log 20_369.log
+Reading problem data from '../modeles/20_369.lp'...
+7461 rows, 14800 columns, 51760 non-zeros
+7380 integer variables, all of which are binary
+22287 lines were read
+GLPK Integer Optimizer 5.0
+7461 rows, 14800 columns, 51760 non-zeros
+7380 integer variables, all of which are binary
+Preprocessing...
+7320 constraint coefficient(s) were reduced
+7461 rows, 14780 columns, 51740 non-zeros
+7380 integer variables, all of which are binary
+Scaling...
+ A: min|aij| =  2.938e-05  max|aij| =  4.000e+00  ratio =  1.362e+05
+GM: min|aij| =  5.206e-02  max|aij| =  1.921e+01  ratio =  3.690e+02
+EQ: min|aij| =  2.710e-03  max|aij| =  1.000e+00  ratio =  3.690e+02
+2N: min|aij| =  1.880e-03  max|aij| =  1.775e+00  ratio =  9.439e+02
+Constructing initial basis...
+Size of triangular part is 7461
+Solving LP relaxation...
+GLPK Simplex Optimizer 5.0
+7461 rows, 14780 columns, 51740 non-zeros
+      0: obj =   4.000000000e+01 inf =   9.950e+01 (41)
+Perturbing LP to avoid stalling [199]...
+    419: obj =   4.997099001e-01 inf =   0.000e+00 (0)
+Removing LP perturbation [1481]...
+*  1481: obj =  -4.471560847e+00 inf =   1.500e-13 (0) 1
+OPTIMAL LP SOLUTION FOUND
+Integer optimization begins...
+Long-step dual simplex will be used
++  1481: mip =     not found yet >=              -inf        (1; 0)
++  1659: mip =     not found yet >=  -4.471560847e+00        (177; 0)
++  1957: mip =     not found yet >=  -4.471560847e+00        (428; 0)
++  2121: mip =     not found yet >=  -4.471560847e+00        (588; 0)
++  2309: mip =     not found yet >=  -4.471560847e+00        (773; 0)
++  2488: >>>>>  -4.453404472e+00 >=  -4.471560847e+00   0.4% (947; 0)
++  2654: >>>>>  -4.457740515e+00 >=  -4.471560847e+00   0.3% (529; 1079)
++  2805: >>>>>  -4.471560847e+00 >=  -4.471560847e+00   0.0% (520; 1324)
++  2805: mip =  -4.471560847e+00 >=     tree is empty   0.0% (0; 2367)
+INTEGER OPTIMAL SOLUTION FOUND
+Time used:   28.4 secs
+Memory used: 22.1 Mb (23141764 bytes)

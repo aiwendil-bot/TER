@@ -1,0 +1,46 @@
+GLPSOL--GLPK LP/MIP Solver 5.0
+Parameter(s) specified in the command line:
+ --lp ../modeles/20_409.lp --log 20_409.log
+Reading problem data from '../modeles/20_409.lp'...
+8261 rows, 16400 columns, 57360 non-zeros
+8180 integer variables, all of which are binary
+24687 lines were read
+GLPK Integer Optimizer 5.0
+8261 rows, 16400 columns, 57360 non-zeros
+8180 integer variables, all of which are binary
+Preprocessing...
+8120 constraint coefficient(s) were reduced
+8261 rows, 16380 columns, 57340 non-zeros
+8180 integer variables, all of which are binary
+Scaling...
+ A: min|aij| =  2.391e-05  max|aij| =  4.000e+00  ratio =  1.673e+05
+GM: min|aij| =  4.945e-02  max|aij| =  2.022e+01  ratio =  4.090e+02
+EQ: min|aij| =  2.445e-03  max|aij| =  1.000e+00  ratio =  4.090e+02
+2N: min|aij| =  1.530e-03  max|aij| =  1.707e+00  ratio =  1.116e+03
+Constructing initial basis...
+Size of triangular part is 8261
+Solving LP relaxation...
+GLPK Simplex Optimizer 5.0
+8261 rows, 16380 columns, 57340 non-zeros
+      0: obj =   4.000000000e+01 inf =   1.142e+03 (41)
+Perturbing LP to avoid stalling [199]...
+    779: obj =   4.997638690e-01 inf =   0.000e+00 (0)
+Removing LP perturbation [1776]...
+*  1776: obj =  -4.471151802e+00 inf =   3.934e-15 (0) 1
+OPTIMAL LP SOLUTION FOUND
+Integer optimization begins...
+Long-step dual simplex will be used
++  1776: mip =     not found yet >=              -inf        (1; 0)
++  1926: mip =     not found yet >=  -4.471151802e+00        (152; 0)
++  2085: mip =     not found yet >=  -4.471151802e+00        (309; 0)
++  2248: mip =     not found yet >=  -4.471151802e+00        (472; 0)
++  2414: mip =     not found yet >=  -4.471151802e+00        (638; 0)
++  2463: >>>>>  -4.466339742e+00 >=  -4.471151802e+00   0.1% (651; 0)
++  2721: mip =  -4.466339742e+00 >=  -4.471151802e+00   0.1% (877; 5)
++  2959: >>>>>  -4.467673372e+00 >=  -4.471151802e+00 < 0.1% (1085; 5)
++  3277: mip =  -4.467673372e+00 >=  -4.471151802e+00 < 0.1% (1369; 19)
++  3416: >>>>>  -4.471151802e+00 >=  -4.471151802e+00 < 0.1% (1506; 19)
++  3416: mip =  -4.471151802e+00 >=     tree is empty   0.0% (0; 3035)
+INTEGER OPTIMAL SOLUTION FOUND
+Time used:   37.4 secs
+Memory used: 24.2 Mb (25413804 bytes)

@@ -1,0 +1,45 @@
+GLPSOL--GLPK LP/MIP Solver 5.0
+Parameter(s) specified in the command line:
+ --lp ../modeles/20_449.lp --log 20_449.log
+Reading problem data from '../modeles/20_449.lp'...
+9061 rows, 18000 columns, 62960 non-zeros
+8980 integer variables, all of which are binary
+27087 lines were read
+GLPK Integer Optimizer 5.0
+9061 rows, 18000 columns, 62960 non-zeros
+8980 integer variables, all of which are binary
+Preprocessing...
+8920 constraint coefficient(s) were reduced
+9061 rows, 17980 columns, 62940 non-zeros
+8980 integer variables, all of which are binary
+Scaling...
+ A: min|aij| =  1.984e-05  max|aij| =  4.000e+00  ratio =  2.016e+05
+GM: min|aij| =  4.719e-02  max|aij| =  2.119e+01  ratio =  4.490e+02
+EQ: min|aij| =  2.227e-03  max|aij| =  1.000e+00  ratio =  4.490e+02
+2N: min|aij| =  1.953e-03  max|aij| =  1.775e+00  ratio =  9.089e+02
+Constructing initial basis...
+Size of triangular part is 9061
+Solving LP relaxation...
+GLPK Simplex Optimizer 5.0
+9061 rows, 17980 columns, 62940 non-zeros
+      0: obj =   4.000000000e+01 inf =   9.950e+01 (41)
+Perturbing LP to avoid stalling [199]...
+    459: obj =   4.998040675e-01 inf =   0.000e+00 (0)
+Removing LP perturbation [1386]...
+*  1386: obj =  -4.471280624e+00 inf =   6.687e-15 (0) 1
+OPTIMAL LP SOLUTION FOUND
+Integer optimization begins...
+Long-step dual simplex will be used
++  1386: mip =     not found yet >=              -inf        (1; 0)
++  1483: mip =     not found yet >=  -4.471280624e+00        (98; 0)
++  1574: mip =     not found yet >=  -4.471280624e+00        (188; 0)
++  1685: mip =     not found yet >=  -4.471280624e+00        (298; 0)
++  1781: mip =     not found yet >=  -4.471280624e+00        (393; 0)
++  1894: mip =     not found yet >=  -4.471280624e+00        (505; 0)
++  2023: mip =     not found yet >=  -4.471280624e+00        (633; 0)
++  2141: mip =     not found yet >=  -4.471280624e+00        (751; 0)
++  2234: >>>>>  -4.471280624e+00 >=  -4.471280624e+00 < 0.1% (839; 0)
++  2234: mip =  -4.471280624e+00 >=     tree is empty   0.0% (0; 1677)
+INTEGER OPTIMAL SOLUTION FOUND
+Time used:   38.6 secs
+Memory used: 26.2 Mb (27449892 bytes)
