@@ -12,7 +12,6 @@ function methode_2(first::Float64, last::Float64, m::Int64, x::Float64)
     fpoints=map(x->x^3 - x,breakpoints)
 
     s = [(fpoints[k+1] - fpoints[k])/(breakpoints[k+1] - breakpoints[k]) for k in 1:m]
-    print(s)
     concave = Vector{Int64}(undef,0)
     convexe = Vector{Int64}(undef,0)
 
@@ -23,9 +22,7 @@ function methode_2(first::Float64, last::Float64, m::Int64, x::Float64)
         if s[k]< s[k-1]
             push!(concave,k)
         end
-    end                 
-    println(concave)
-    println(convexe)
+    end
 
     model::Model = Model(GLPK.Optimizer)
     #model::Model = Model(SCIP.Optimizer)              M = m + 1
@@ -80,12 +77,10 @@ function min_sum_xi(first::Float64, last::Float64, n::Int64, m::Int64)::Vector{F
     @objective(model, Min, sum(x[i] for i in 1:n))
 
     for i in 1:n
-        for k in convexe
-            @constraint(model, x[i] + sum(d[i,l] for l in 1:(m-1)) >= breakpoints[m])
-            for l in 1:(m-1)
-                @constraint(model, d[i,l] <= breakpoints[l+1] - breakpoints[l])
-            end    
-        end
+        @constraint(model, x[i] + sum(d[i,l] for l in 1:(m-1)) >= breakpoints[m])
+        for l in 1:(m-1)
+            @constraint(model, d[i,l] <= breakpoints[l+1] - breakpoints[l])
+        end    
         for k in concave
             @constraint(model, x[i] + last * (u[i,k] - 1 ) <= z[i,k])
         end    
