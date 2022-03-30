@@ -14,6 +14,8 @@ function min_sum_xi(first::Float64, last::Float64, n::Int64, m::Int64)::Vector{F
 
     model::Model = Model(GLPK.Optimizer)
     #model::Model = Model(SCIP.Optimizer)
+    set_optimizer_attribute(model,"msg_lev", GLPK.GLP_MSG_ALL)
+    set_optimizer_attribute(model,"presolve", GLP_ON)
 
     @variable(model, y[1:n, 1:m], Bin)
     @variable(model, t[1:n, 1:m+1] >= 0)
@@ -35,7 +37,7 @@ function min_sum_xi(first::Float64, last::Float64, n::Int64, m::Int64)::Vector{F
     @constraint(model, sum(sum(fpoints[k] * t[i,k] for k in 1:(m+1)) for i in 1:n) <= 1)
     #@constraint(model, sum(x[i]^2 for i in 1:n) <= 1)
 
-    write_to_file(model, "focus/$n"*"_"*"$m.lp", format = MOI.FileFormats.FORMAT_LP)
+    #write_to_file(model, "focus/$n"*"_"*"$m.lp", format = MOI.FileFormats.FORMAT_LP)
 
     optimize!(model)
 
@@ -61,16 +63,16 @@ function graphiques_erreurs()
     end
 
     #writedlm("resultats_calculs.txt", valeurs)
-    writedlm("glpk_jump_temps.txt", temps)
+    writedlm("glpk_jump_temps_presolve.txt", temps)
     labels = ["n = 2" "n = 3" "n = 4" "n = 5" "n = 10" "n = 15" "n = 20" ]
     ptempsloglog = plot(nb_breakpoints, temps, title="Min sum x_i, sum x_i^2 <= 1", label=labels,xlabel="nb_breakpoints", ylabel="temps execution", yaxis=:log, xaxis=:log,legend=:outerbottomright)
     ptempslog = plot(nb_breakpoints, temps, title="Min sum x_i, sum x_i^2 <= 1", label=labels,xlabel="nb_breakpoints", ylabel="temps execution", yaxis=:log,legend=:outerbottomright)
     
     ptemps = plot(nb_breakpoints, temps, title="Min sum x_i, sum x_i^2 <= 1", label=labels,xlabel="nb_breakpoints", ylabel="temps execution",legend=:outerbottomright)
-    savefig(ptempsloglog, "glpk_jump_tempsloglog.png")
+    savefig(ptempsloglog, "glpk_jump_tempsloglog_presolve.png")
 
-    savefig(ptempslog, "glpk_jump_tempslog.png")
-    savefig(ptemps, "glpk_jump_temps.png")
+    savefig(ptempslog, "glpk_jump_tempslog_presolve.png")
+    savefig(ptemps, "glpk_jump_temps_presolve.png")
 
 end
 
@@ -86,8 +88,10 @@ function focus()
     savefig(ptemps, "focus/temps.png")
 
 end
-labels = ["n = 2" "n = 3" "n = 4" "n = 5" "n = 10" "n = 15" "n = 20" ]
-breakpoints = [k for k = 320:330]
-temps = readdlm("focus/temps.txt")
-ptemps = plot(breakpoints, temps, title="Min sum x_i, sum x_i^2 <= 1", label=labels,xlabel="nb_breakpoints", ylabel="temps execution",legend=:outerbottomright)
-savefig(ptemps, "focus/temps.png")
+#labels = ["n = 2" "n = 3" "n = 4" "n = 5" "n = 10" "n = 15" "n = 20" ]
+#breakpoints = [k for k = 320:330]
+#temps = readdlm("focus/temps.txt")
+#ptemps = plot(breakpoints, temps, title="Min sum x_i, sum x_i^2 <= 1", label=labels,xlabel="nb_breakpoints", ylabel="temps execution",legend=:outerbottomright)
+#savefig(ptemps, "focus/temps.png")
+
+graphiques_erreurs()

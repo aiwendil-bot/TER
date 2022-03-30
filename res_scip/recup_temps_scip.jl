@@ -42,4 +42,9 @@ function recup_scip()
 
 end
 
-recup_scip()
+temps = readdlm("res_scip/scip_temps.txt")
+
+labels = ["n = 15" "n = 20" ]
+breakpoints = [k for k = 4:5:500]
+ptemps = plot(breakpoints, temps[:,6:7], title="Min sum x_i, sum x_i^2 <= 1", label=labels,xlabel="nb_breakpoints", ylabel="temps execution",xaxis=:log ,yaxis=:log,legend=:outerbottomright)
+savefig(ptemps, "res_scip/scip_temps_loglog.png")
