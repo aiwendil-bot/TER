@@ -88,10 +88,8 @@ function focus()
     savefig(ptemps, "focus/temps.png")
 
 end
-#labels = ["n = 2" "n = 3" "n = 4" "n = 5" "n = 10" "n = 15" "n = 20" ]
-#breakpoints = [k for k = 320:330]
-#temps = readdlm("focus/temps.txt")
-#ptemps = plot(breakpoints, temps, title="Min sum x_i, sum x_i^2 <= 1", label=labels,xlabel="nb_breakpoints", ylabel="temps execution",legend=:outerbottomright)
-#savefig(ptemps, "focus/temps.png")
-
-graphiques_erreurs()
+labels = ["n = 2" "n = 3" "n = 5" "n = 10" "n = 15" "n = 20" ]
+breakpoints = [k for k = 4:5:500]
+distance = readdlm("res_jump/resultats_calculs.txt")
+pdistance = plot(breakpoints, distance[:,[1,2,4,5,6,7]], title="Min sum x_i, sum x_i^2 <= 1", label=labels,xlabel="nb_breakpoints", ylabel="distance à la valeur exacte",yaxis=:log,xaxis=:log,legend=:outerbottomright)
+savefig(pdistance, "res_jump/distancevaleurexacte_log_log.png")
