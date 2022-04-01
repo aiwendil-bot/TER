@@ -64,11 +64,11 @@ function methode_2_review(x::Float64,m::Int64,bornes::Vector{Float64})
     return L_f_x    
 end
 
-points_approches = Vector{Float64}(undef,0)
+#points_approches = Vector{Float64}(undef,0)
 
-for x in 1:0.01:2
-    push!(points_approches,methode_2_review(x,5,[1.0,2.0]))
-end
-f(x) = x->x^3-2*x^2-x+1
+#for x in 1:0.01:2
+#    push!(points_approches,methode_2_review(x,5,[1.0,2.0]))
+#end
+#f(x) = x->x^3-2*x^2-x+1
 
-plot([k for k in 1:0.01:2],[points_approches,f])
+#plot([k for k in 1:0.01:2],[points_approches,f])

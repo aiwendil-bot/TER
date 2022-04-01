@@ -27,18 +27,19 @@ function methode_2(functions,m::Vector{Int64},bornes::Vector{Vector{Float64}},up
             end
         end
     end
+    println(s)
     println(breakpoints[1])
     println(fpoints)
     println(convexe)
     println(concave)
     model::Model = Model(GLPK.Optimizer)
     #model::Model = Model(SCIP.Optimizer)              M = m + 1
-    @variable(model, x[1:n] >= 0)
+    @variable(model,bornes[1][1] <= x[1:n] <= bornes[1][2])
     @variable(model, d[1:n,1:(maximum(m)-1)] >= 0)
     @variable(model, z[1:n,1:maximum(m)] >= 0)
     @variable(model, u[1:n,1:maximum(m)], Bin)
 
-    @objective(model,Min,sum((fpoints[i][1] + s[i][1]*(x[i]-breakpoints[i][1]) + sum(((s[i][k] - s[i][k-1])*(x[i] - breakpoints[i][k] 
+    @objective(model,Min,sum((fpoints[i][1] + s[i][1]*(x[i]-breakpoints[i][1]) + 2*sum(((s[i][k] - s[i][k-1])*(x[i] - breakpoints[i][k] 
     + sum(d[i,l] for l in 1:(k-1)))) for k in convexe[i]) + sum(((s[i][k] - s[i][k-1])*(x[i]-2*z[i,k] +2*breakpoints[i][k]*u[i,k] - breakpoints[i][k] ))
      for k in concave[i])) for i in 1:n))
     for i in 1:n
@@ -59,7 +60,7 @@ function methode_2(functions,m::Vector{Int64},bornes::Vector{Vector{Float64}},up
     end        
 
     write_to_file(model, "methode2.lp", format = MOI.FileFormats.FORMAT_LP)    
-         
+    println(model)     
     #@constraint(model, sum(x[i]^2 for i in 1:n) <= 1)
     optimize!(model)
 

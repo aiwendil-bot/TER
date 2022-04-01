@@ -88,6 +88,7 @@ function min_sum_xi(first::Float64, last::Float64, n::Int64, m::Int64)::Vector{F
 
     @constraint(model, sum( (fpoints[1] + s[1]*(x[i] - breakpoints[1]) + sum( (s[k] - s[k-1])*(x[i] - breakpoints[k] + sum(d[i,l] for l in 1:(k-1))) for k in convexe) + 0.5 * sum( (s[k] - s[k-1])*(x[i] - 2*z[i,k] + 2*breakpoints[k]*u[i,k] - breakpoints[k] ) for k in concave)) for i in 1:n)  <= 1)
     #@constraint(model, sum(x[i]^2 for i in 1:n) <= 1)
+    println(model)
     optimize!(model)
 
         return value.(x)       
