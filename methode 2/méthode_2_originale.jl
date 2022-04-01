@@ -28,13 +28,14 @@ function methode_2(functions,m::Vector{Int64},bornes::Vector{Vector{Float64}},up
         end
     end
     println(breakpoints[1])
+    println(fpoints)
     println(convexe)
     println(concave)
     model::Model = Model(GLPK.Optimizer)
     #model::Model = Model(SCIP.Optimizer)              M = m + 1
     @variable(model, x[1:n] >= 0)
     @variable(model, d[1:n,1:(maximum(m)-1)] >= 0)
-    @variable(model, z[1:n,1:maximum(m)])
+    @variable(model, z[1:n,1:maximum(m)] >= 0)
     @variable(model, u[1:n,1:maximum(m)], Bin)
 
     @objective(model,Min,sum((fpoints[i][1] + s[i][1]*(x[i]-breakpoints[i][1]) + sum(((s[i][k] - s[i][k-1])*(x[i] - breakpoints[i][k] 
@@ -51,12 +52,13 @@ function methode_2(functions,m::Vector{Int64},bornes::Vector{Vector{Float64}},up
 
         for k in concave[i]
             println(k)
-            @constraint(model, (x[i] + upper_bound_x * (u[i,k] - 1 )) <= z[i,k])
+            @constraint(model, (x[i] + upper_bound_x*(u[i,k] - 1 )) <= z[i,k])
             @constraint(model, z[i,k] >= 0)
         end   
 
     end        
-    
+
+    write_to_file(model, "methode2.lp", format = MOI.FileFormats.FORMAT_LP)    
          
     #@constraint(model, sum(x[i]^2 for i in 1:n) <= 1)
     optimize!(model)
