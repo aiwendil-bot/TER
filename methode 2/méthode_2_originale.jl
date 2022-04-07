@@ -38,13 +38,14 @@ function methode_2(functions,m::Vector{Int64},bornes::Vector{Vector{Float64}},up
     @variable(model, d[1:n,1:(maximum(m)-1)] >= 0)
     @variable(model, z[1:n,1:maximum(m)] >= 0)
     @variable(model, u[1:n,1:maximum(m)], Bin)
+    @constraint(model,x[1]>= 1.5)
 
     @objective(model,Min,sum((fpoints[i][1] + s[i][1]*(x[i]-breakpoints[i][1]) + 2*sum(((s[i][k] - s[i][k-1])*(x[i] - breakpoints[i][k] 
     + sum(d[i,l] for l in 1:(k-1)))) for k in convexe[i]) + sum(((s[i][k] - s[i][k-1])*(x[i]-2*z[i,k] +2*breakpoints[i][k]*u[i,k] - breakpoints[i][k] ))
      for k in concave[i])) for i in 1:n))
     for i in 1:n
         #contraintes partie convexe
-        @constraint(model, x[i] + sum(d[i,l] for l in 1:(m[i]-2)) >= breakpoints[i][m[i]-1])
+        #@constraint(model, x[i] + sum(d[i,l] for l in 1:(m[i]-2)) >= breakpoints[i][m[i]-1])
         for l in 1:(m[i]-1)
             @constraint(model,d[i,l] <= breakpoints[i][l+1] - breakpoints[i][l])
         end
@@ -59,7 +60,7 @@ function methode_2(functions,m::Vector{Int64},bornes::Vector{Vector{Float64}},up
 
     end        
 
-    write_to_file(model, "methode2.lp", format = MOI.FileFormats.FORMAT_LP)    
+    #write_to_file(model, "methode2.lp", format = MOI.FileFormats.FORMAT_LP)    
     println(model)     
     #@constraint(model, sum(x[i]^2 for i in 1:n) <= 1)
     optimize!(model)
@@ -67,3 +68,39 @@ function methode_2(functions,m::Vector{Int64},bornes::Vector{Vector{Float64}},up
     return value.(x)
 end
 
+function approx_avec_val_absolues(x::Float64, breakpoints::Vector{Float64}, fpoints::Vector{Float64}, s::Vector{Float64})::Float64
+
+    return fpoints[1] + s[1]*(x-breakpoints[1]) + sum((s[k] - s[k-1])/2 * (abs(x-breakpoints[k]) + x - breakpoints[k]) for k = 2:length(s))
+
+end
+
+#bornes
+a = 1.0
+b = 3.0
+
+
+#nb_breakpoints
+m = 3
+bornes = [a,b]
+
+breakpoints = collect(LinRange(bornes[1],bornes[2],m))
+#fbreakpoints = map(x->-x^2 + 3*x + 3,breakpoints)
+#fbreakpoints = map(x->5-x+1-1.5*(abs(x-2)+x-2),breakpoints)
+fbreakpoints = map(x->2*(x-1) + 2*(abs(x-2)+x-2) + (abs(x-3)+x-3),breakpoints)
+#fpoints = map(x->-x^2 + 3*x + 3,[k for k in a:0.01:b])
+fpoints = map(x->2*(x-1) + 2*(abs(x-2)+x-2) + (abs(x-3)+x-3),[k for k in a:0.01:b])
+
+s= [(fbreakpoints[k+1] - fbreakpoints[k])/(breakpoints[k+1] - breakpoints[k]) for k in 1:(m-1)]
+
+points_approches = Vector{Float64}(undef,0)
+
+for x = a:0.01:b
+    push!(points_approches,approx_avec_val_absolues(x,breakpoints,fpoints,s))
+
+end
+
+p=plot([k for k in a:0.01:b],[points_approches,fpoints])
+display(p)
+f(x::Float64) = 2*(x-1) + 2*(abs(x-2)+x-2) + (abs(x-3)+x-3)
+
+println(methode_2([f],[m],[[a,b]],b))
