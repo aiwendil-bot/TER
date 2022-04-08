@@ -38,7 +38,6 @@ function methode_2(functions,m::Vector{Int64},bornes::Vector{Vector{Float64}},up
     @variable(model, d[1:n,1:(maximum(m)-1)] >= 0)
     @variable(model, z[1:n,1:maximum(m)] >= 0)
     @variable(model, u[1:n,1:maximum(m)], Bin)
-    @constraint(model,x[1]>= 1.5)
 
     @objective(model,Min,sum((fpoints[i][1] + s[i][1]*(x[i]-breakpoints[i][1]) + 2*sum(((s[i][k] - s[i][k-1])*(x[i] - breakpoints[i][k] 
     + sum(d[i,l] for l in 1:(k-1)))) for k in convexe[i]) + sum(((s[i][k] - s[i][k-1])*(x[i]-2*z[i,k] +2*breakpoints[i][k]*u[i,k] - breakpoints[i][k] ))
@@ -54,7 +53,7 @@ function methode_2(functions,m::Vector{Int64},bornes::Vector{Vector{Float64}},up
 
         for k in concave[i]
             println(k)
-            @constraint(model, (x[i] + upper_bound_x*(u[i,k] - 1 )) <= z[i,k])
+            @constraint(model, (x[i] + breakpoints[i][k+1]*(u[i,k] - 1 )) <= z[i,k])
             @constraint(model, z[i,k] >= 0)
         end   
 
@@ -75,20 +74,20 @@ function approx_avec_val_absolues(x::Float64, breakpoints::Vector{Float64}, fpoi
 end
 
 #bornes
-a = 1.0
-b = 3.0
+a = 0.0
+b = 0.4
 
 
 #nb_breakpoints
-m = 3
+m = 5
 bornes = [a,b]
 
 breakpoints = collect(LinRange(bornes[1],bornes[2],m))
 #fbreakpoints = map(x->-x^2 + 3*x + 3,breakpoints)
 #fbreakpoints = map(x->5-x+1-1.5*(abs(x-2)+x-2),breakpoints)
-fbreakpoints = map(x->2*(x-1) + 2*(abs(x-2)+x-2) + (abs(x-3)+x-3),breakpoints)
+fbreakpoints = map(x->x^3-2*x^2-x+1,breakpoints)
 #fpoints = map(x->-x^2 + 3*x + 3,[k for k in a:0.01:b])
-fpoints = map(x->2*(x-1) + 2*(abs(x-2)+x-2) + (abs(x-3)+x-3),[k for k in a:0.01:b])
+fpoints = map(x->x^3-2*x^2-x+1,[k for k in a:0.01:b])
 
 s= [(fbreakpoints[k+1] - fbreakpoints[k])/(breakpoints[k+1] - breakpoints[k]) for k in 1:(m-1)]
 
@@ -101,6 +100,6 @@ end
 
 p=plot([k for k in a:0.01:b],[points_approches,fpoints])
 display(p)
-f(x::Float64) = 2*(x-1) + 2*(abs(x-2)+x-2) + (abs(x-3)+x-3)
+f(x::Float64) = x^3-2*x^2-x+1
 
 println(methode_2([f],[m],[[a,b]],b))
