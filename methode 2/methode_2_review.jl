@@ -8,7 +8,7 @@ using DelimitedFiles
 function methode_2_review(x::Float64,m::Int64,bornes::Vector{Float64})
 
     breakpoints=collect(LinRange(bornes[1],bornes[2],m))
-    fpoints= map(x->x^3-2*x^2-x+1,breakpoints)
+    fpoints= map(x->-x^3 + 2*x^2+x-1,breakpoints)
 
     s::Vector{Float64} = [(fpoints[k+1] - fpoints[k])/(breakpoints[k+1] - breakpoints[k]) for k in 1:(m-1)]
     concave::Vector{Int64} = Vector{Int64}(undef,0)
@@ -55,24 +55,24 @@ function methode_2_review(x::Float64,m::Int64,bornes::Vector{Float64})
         L_f_x += sum(((s[k] - s[k-1])*(x - breakpoints[k] + sum(value(d[l]) for l in 1:(k-1)))) for k in convexe )
     end
     if !isempty(concave)    
-        L_f_x += sum(((s[k] - s[k-1])*(x -2*value(z[k]) +2*breakpoints[k]*value(u[k]) - breakpoints[k] )) for k in concave)
+        L_f_x += sum(((s[k] - s[k-1])*(2*x -2*value(z[k]) +2*breakpoints[k]*value(u[k]) - 2*breakpoints[k] )) for k in concave)
     end    
     return L_f_x    
 end
 
 #bornes
-a = 0.0
-b = 0.4
+a = -1.0
+b = 2.5
 
 
 #nb_breakpoints
-m = 5
+m = 7
 bornes = [a,b]
 
 breakpoints = collect(LinRange(bornes[1],bornes[2],m))
-#fbreakpoints = map(x->-x^2 + 3*x + 3,breakpoints)
+fbreakpoints = map(x->-x^3 + 2*x^2+x-1,breakpoints)
 #fpoints = map(x->-x^2 + 3*x + 3,[k for k in a:0.01:b])
-fpoints = map(x->x->x^3-2*x^2-x+1,[k for k in a:0.01:b])
+fpoints = map(x->-x^3 + 2*x^2+x-1,[k for k in a:0.01:b])
 
 s= [(fbreakpoints[k+1] - fbreakpoints[k])/(breakpoints[k+1] - breakpoints[k]) for k in 1:(m-1)]
 
@@ -82,9 +82,9 @@ points_approx = Vector{Float64}(undef,0)
 
 for x = a:0.01:b
     #push!(points_approx,approx_avec_val_absolues(x,breakpoints,fpoints,s))
-    push!(points_approches,methode_2_review(x,5,[a,b]))
+    push!(points_approches,methode_2_review(x,7,[a,b]))
 
 end
 
 
-plot([k for k in 0:0.01:0.4],[points_approches,fpoints])
+plot([k for k in -1.0:0.01:2.5],[points_approches,fpoints])
